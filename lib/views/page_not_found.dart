@@ -52,7 +52,7 @@ class PageNotFound extends StatelessWidget {
   Widget buildAvatar(BuildContext context) {
     return CircleAvatar(
       //foregroundColor: kTertiaryColor,
-      backgroundColor: kTertiaryColor,
+      backgroundColor: kTertiaryColor.withOpacity(0.3),
       child: Icon(
         Icons.report_off,
         color: kPrimaryColor,

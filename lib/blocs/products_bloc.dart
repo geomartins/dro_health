@@ -1,42 +1,48 @@
 import 'dart:async';
+import 'package:dro_health/models/product_model.dart';
+import 'package:dro_health/services/database_service.dart';
 import 'package:rxdart/rxdart.dart';
 
 class ProductsBloc extends Object {
-  BehaviorSubject _email = new BehaviorSubject<String>();
-  BehaviorSubject _isLoading = new BehaviorSubject<bool>();
+  BehaviorSubject _products = new BehaviorSubject<List<ProductModel>>();
+  BehaviorSubject _searchToggle = new BehaviorSubject<bool>();
 
   // SINKS
-  void emailSink(String value) {
-    _email.sink.add(value);
-    _listeners();
+  void productsSink(List<ProductModel> value) {
+    _products.sink.add(value);
   }
 
-  void loadingSink(bool value) {
-    _isLoading.sink.add(value);
+  void searchToggleSink(bool value) {
+    _searchToggle.sink.add(value);
   }
 
   //STREAMS
-  Stream get email => _email.stream;
+  Stream get products => _products.stream;
+  Stream get searchToggle => _searchToggle.stream;
 
-  Stream get isLoading => _isLoading.stream;
-
-  //LISTENERS
-  String validEmail = '';
-  void _listeners() {
-    email.listen((event) => validEmail = event);
+  void fetchProducts() {
+    List<Map<String, dynamic>> datas = DatabaseService().fetchProducts();
+    List<ProductModel> result = [];
+    for (Map<String, dynamic> x in datas) {
+      result.add(ProductModel.fromDatabase(x));
+    }
+    if (result.length > 0) {
+      productsSink(result);
+    }
+    return null;
   }
 
-  //METHODS
-  Future<void> submit() async {
-    // try {
-    //   await AuthService().passwordReset(validEmail);
-    // } catch (e) {
-    //   rethrow;
-    // }
+  void searchProducts(String value) {
+    if (value == "") {
+      fetchProducts();
+      return;
+    }
+    List<ProductModel> searchResult = DatabaseService().searchProducts(value);
+    productsSink(searchResult);
   }
 
   void dispose() {
-    _email.close();
-    _isLoading.close();
+    _products.close();
+    _searchToggle.close();
   }
 }

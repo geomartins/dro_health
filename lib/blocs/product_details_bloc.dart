@@ -1,30 +1,17 @@
 import 'dart:async';
+import 'package:dro_health/models/product_model.dart';
 import 'package:rxdart/rxdart.dart';
 
 class ProductDetailsBloc extends Object {
-  BehaviorSubject _email = new BehaviorSubject<String>();
-  BehaviorSubject _isLoading = new BehaviorSubject<bool>();
+  BehaviorSubject _product = new BehaviorSubject<ProductModel>();
 
   // SINKS
-  void emailSink(String value) {
-    _email.sink.add(value);
-    _listeners();
-  }
-
-  void loadingSink(bool value) {
-    _isLoading.sink.add(value);
+  void productSink(ProductModel value) {
+    _product.sink.add(value);
   }
 
   //STREAMS
-  Stream get email => _email.stream;
-
-  Stream get isLoading => _isLoading.stream;
-
-  //LISTENERS
-  String validEmail = '';
-  void _listeners() {
-    email.listen((event) => validEmail = event);
-  }
+  Stream get product => _product.stream;
 
   //METHODS
   Future<void> submit() async {
@@ -36,7 +23,6 @@ class ProductDetailsBloc extends Object {
   }
 
   void dispose() {
-    _email.close();
-    _isLoading.close();
+    _product.close();
   }
 }

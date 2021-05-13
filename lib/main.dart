@@ -8,9 +8,7 @@ import 'package:dro_health/views/products.dart';
 import 'package:dro_health/views/splash.dart';
 import 'package:flutter/material.dart';
 
-void main() {
-  runApp(MyApp());
-}
+void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
   @override
